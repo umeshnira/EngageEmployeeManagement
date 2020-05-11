@@ -43,8 +43,8 @@ namespace EAM.WebAPI.Controllers
             foreach(var name in claims.Keys)
             {
                 if (string.Equals(name, ClaimTypes.Name)
-                    || string.Equals(name, ClaimTypes.Role))
-                {
+                    || string.Equals(name, ClaimTypes.Role)
+                    || string.Equals(name, "userid"))                 {
                     newClaims.Add(claims[name]);
                 }
             }
@@ -74,7 +74,8 @@ namespace EAM.WebAPI.Controllers
                 var claims = new Claim[]
                 {
                     new Claim(ClaimTypes.Name, "abc"),
-                    new Claim(ClaimTypes.Role, "admin")
+                    new Claim(ClaimTypes.Role, "admin"),
+                    new Claim("userid", "1")
                 };
                 var token = CreateToken(claims);
                 return token;
