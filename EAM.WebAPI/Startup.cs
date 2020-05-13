@@ -37,6 +37,8 @@ namespace EAM.WebAPI
             services.AddScoped<RepositoryStore>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
+            services.AddSingleton<TaskSingleton>();
+
             var jwtOptions = Configuration.GetSection("JWT").Get<JWTOptions>();
             var key = Encoding.ASCII.GetBytes(jwtOptions.Secret);
             services.AddAuthentication(x =>

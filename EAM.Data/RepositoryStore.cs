@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Text;
 using Microsoft.Extensions.Options;
 using EAM.Common.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace EAM.Data
 {
@@ -14,7 +15,7 @@ namespace EAM.Data
         {
             Connection = options.Value.Connection;
         }
-        public string Connection;
+        public readonly string Connection;
         public void Dispose()
         {
         }
@@ -22,6 +23,15 @@ namespace EAM.Data
 
     public class RepositoryBase
     {
-        public string Connection;
+        public string Connection { get; private set; }
+        public ILogger Logger  { get; private set; }
+
+        public void SetOnce(string connection, ILogger logger)
+        {
+            if (this.Connection == null) { this.Connection = connection; }
+            else { logger.LogError("Trying to rest connection."); }
+            if (this.Logger == null) { this.Logger = logger; }
+            else { logger.LogError("Trying to rest logger."); }
+        }
     }
 }
