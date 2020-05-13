@@ -45,7 +45,7 @@ SELECT NotificationID, Title, Description FROM Notification WHERE NotificationID
         {
             using (var conn = new SqlConnection(this.Connection))
             {
-                var result = conn.ExecuteScalar<int>(@"DELETE FROM Notification WHERE NotificationID = @nid; SELECT 1;",
+                var result = conn.ExecuteScalar<int>(@"UPDATE Notification SET Deleted = 1 WHERE NotificationID = @nid; SELECT 1;",
                     new { nid = id });
                 return (result == 1);
             }
@@ -91,7 +91,7 @@ SELECT @nid, @sentto, @status WHERE NOT EXISTS
             using (var conn = new SqlConnection(this.Connection))
             {
                 conn.Execute(@"UPDATE NotificationSent  
-SET Status = @status, ViewDate = @viewDate WHERE SentTo = @sentto AND Status = @status1;",
+SET Status = @status, ViewDate = @viewDate WHERE SentTo = @sentto AND Status = @status1 AND Deleted = 0;",
                 new
                 {
                     status = (int)NotificationStatus.Viewed,
