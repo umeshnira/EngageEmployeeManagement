@@ -34,10 +34,13 @@ namespace EAM.WebAPI
             services.AddControllers();
             services.Configure<DapperOptions>(Configuration.GetSection("DapperOptions"));
             services.Configure<JWTOptions>(Configuration.GetSection("JWT"));
+            services.Configure<HostedServiceOptions>(Configuration.GetSection("HostedServices"));
+
             services.AddScoped<RepositoryStore>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             services.AddSingleton<TaskSingleton>();
+            services.AddSingleton<SendMailSingleton>();
 
             var jwtOptions = Configuration.GetSection("JWT").Get<JWTOptions>();
             var key = Encoding.ASCII.GetBytes(jwtOptions.Secret);

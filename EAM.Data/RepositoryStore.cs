@@ -29,9 +29,9 @@ namespace EAM.Data
         public void SetOnce(string connection, ILogger logger)
         {
             if (this.Connection == null) { this.Connection = connection; }
-            else { logger.LogError("Trying to rest connection."); }
+            else { logger.LogError("Trying to reset connection."); }
             if (this.Logger == null) { this.Logger = logger; }
-            else { logger.LogError("Trying to rest logger."); }
+            else { logger.LogError("Trying to reset logger."); }
         }
     }
 }
