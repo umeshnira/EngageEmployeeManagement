@@ -13,12 +13,16 @@ namespace EAM.Data
     {
         private readonly string Connection;
         private readonly ILogger Logger;
+
+        public volatile bool stop = false;
+
         public TaskSingleton(IOptions<DapperOptions> options, ILogger<TaskSingleton> logger)
         {
             Connection = options.Value.Connection;
             Logger = logger;
         }
-        public void ExecDeleteNotifications(bool stop, int count)
+
+        public void ExecDeleteNotifications(int count)
         {
             if (!stop)
             {
@@ -40,5 +44,26 @@ namespace EAM.Data
                 }
             }
         }
+
+        public void ExecTask2(int count)
+        {
+            if (!stop)
+            {
+                using (var conn = new SqlConnection(this.Connection))
+                {
+                    if (!stop)
+                    {
+
+                        Logger.LogInformation($"Task 2 0");
+                    }
+                    if (!stop)
+                    {
+
+                        Logger.LogInformation($"Task 2 1");
+                    }
+                }
+            }
+        }
+
     }
 }

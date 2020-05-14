@@ -26,6 +26,7 @@ namespace EAM.WebAPI
                 }).ConfigureServices(services =>
                 {
                     services.AddHostedService<EAMHostedService>();
+                    services.AddHostedService<SendMailHostedService>();
                 });
     }
 }

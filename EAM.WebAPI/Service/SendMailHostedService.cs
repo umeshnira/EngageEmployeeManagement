@@ -13,13 +13,13 @@ using System.Threading.Tasks;
 
 namespace EAM.WebAPI.Service
 {
-    public class EAMHostedService : IHostedService, IDisposable
+    public class SendMailHostedService : IHostedService, IDisposable
     {
         private Timer _timer;
-        private readonly ILogger<EAMHostedService> _logger;
+        private readonly ILogger<SendMailHostedService> _logger;
         private readonly IOptions<HostedServiceOptions> _options;
-        private readonly TaskSingleton _tasks;
-        public EAMHostedService(ILogger<EAMHostedService> logger, IOptions<HostedServiceOptions> options, TaskSingleton tasks)
+        private readonly SendMailSingleton _tasks;
+        public SendMailHostedService(ILogger<SendMailHostedService> logger, IOptions<HostedServiceOptions> options, SendMailSingleton tasks)
         {
             _logger = logger;
             _options = options;
@@ -29,12 +29,12 @@ namespace EAM.WebAPI.Service
         {
             try
             {
-                var interval = _options.Value.EAMServiceDurationInSeconds;
+                var interval = _options.Value.SendMailServiceDurationInSeconds;
                 _timer = new Timer(ExecuteAtInterval, null, 0, interval * 1000);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                _logger.LogError(ex, "EAM Service statup error");
+                _logger.LogError(ex, "SendMail Service statup error");
             }
             return Task.CompletedTask;
         }
@@ -42,13 +42,12 @@ namespace EAM.WebAPI.Service
         void ExecuteAtInterval(object state)
         {
             //Debug.Print(_options.Value.MinutesToExpire.ToString());
-            _tasks.ExecDeleteNotifications(10);
-            _tasks.ExecTask2(10);
+            _tasks.ExecSendMail(10);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            Debug.Print("EAM Service exiting");
+            Debug.Print("Send Mail Service exiting"); // when function is executing
             _tasks.stop = true;
             //New Timer does not have a stop. 
             _timer?.Change(Timeout.Infinite, 0);
@@ -58,10 +57,12 @@ namespace EAM.WebAPI.Service
 
         public void Dispose()
         {
-            Debug.Print("EAM Service disposing");
+            Debug.Print("Send Mail Service disposing"); // when error is raised
 
             _tasks.stop = true;
             _timer?.Dispose();
         }
+
     }
 }
+
