@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EAM.Common.Entities;
-using EAM.Data;
-using EAM.Data.Repositories;
+using EAM.Application;
+using EAM.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,12 +18,12 @@ namespace EAM.WebAPI.Controllers
     public class NotifyController : ControllerBase
     {
         private readonly ILogger<NotifyController> _logger;
-        private readonly IRepository<NotifyRepository> _repository;
+        private readonly IBService<NotifyService> _service;
 
-        public NotifyController(ILogger<NotifyController> logger, IRepository<NotifyRepository> repository)
+        public NotifyController(ILogger<NotifyController> logger, IBService<NotifyService> service)
         {
             _logger = logger;
-            _repository = repository;
+            _service = service;
         }
 
         [HttpGet]
@@ -32,9 +32,8 @@ namespace EAM.WebAPI.Controllers
         {
             try
             {
-                var principal = this.User;
-                var userid = Convert.ToInt32(principal.Claims.Where(x => x.Type == "userid").First().Value);
-                return _repository.Provider.GetAdminList(del == 1);
+                var userid = Convert.ToInt32(this.User.Identity.Name);
+                return _service.Provider.GetAdminList(del == 1);
             }
             catch (Exception ex)
             {
@@ -49,9 +48,8 @@ namespace EAM.WebAPI.Controllers
         {
             try
             {
-                var principal = this.User;
-                var userid = Convert.ToInt32(principal.Claims.Where(x => x.Type == "userid").First().Value);
-                return _repository.Provider.UserNotificationList(userid);
+                var userid = Convert.ToInt32(this.User.Identity.Name);
+                return _service.Provider.UserNotificationList(userid);
             }
             catch (Exception ex)
             {
@@ -65,9 +63,8 @@ namespace EAM.WebAPI.Controllers
         {
             try
             {
-                var principal = this.User;
-                var userid = Convert.ToInt32(principal.Claims.Where(x => x.Type == "userid").First().Value);
-                return _repository.Provider.ActionTaken(nid, userid);
+                var userid = Convert.ToInt32(this.User.Identity.Name);
+                return _service.Provider.ActionTaken(nid, userid);
             }
             catch (Exception ex)
             {
@@ -81,7 +78,7 @@ namespace EAM.WebAPI.Controllers
         {
             try
             {
-                return _repository.Provider.AssignToUsers(sentObj);
+                return _service.Provider.AssignToUsers(sentObj);
             }
             catch (Exception ex)
             {
@@ -96,10 +93,9 @@ namespace EAM.WebAPI.Controllers
         {
             try
             {
-                var principal = this.User;
-                var userid = Convert.ToInt32(principal.Claims.Where(x => x.Type == "userid").First().Value);
+                var userid = Convert.ToInt32(this.User.Identity.Name);
 
-                var id = _repository.Provider.CreateNotification(notification, userid);
+                var id = _service.Provider.CreateNotification(notification, userid);
                 return new SuccessObj<long>() { result = id, success = true };
             }
             catch (Exception ex)
@@ -115,10 +111,9 @@ namespace EAM.WebAPI.Controllers
         {
             try
             {
-                var principal = this.User;
-                var userid = Convert.ToInt32(principal.Claims.Where(x => x.Type == "userid").First().Value);
+                var userid = Convert.ToInt32(this.User.Identity.Name);
 
-                return _repository.Provider.GetOne(nid, userid);
+                return _service.Provider.GetOne(nid, userid);
             }
             catch (Exception ex)
             {
@@ -134,10 +129,9 @@ namespace EAM.WebAPI.Controllers
         {
             try
             {
-                var principal = this.User;
-                var userid = Convert.ToInt32(principal.Claims.Where(x => x.Type == "userid").First().Value);
+                var userid = Convert.ToInt32(this.User.Identity.Name);
 
-                return _repository.Provider.DeleteOne(idObj.id, userid);
+                return _service.Provider.DeleteOne(idObj.id, userid);
             }
             catch (Exception ex)
             {

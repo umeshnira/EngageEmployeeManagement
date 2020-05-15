@@ -9,18 +9,6 @@ using Microsoft.Extensions.Logging;
 
 namespace EAM.Data
 {
-    public class RepositoryStore : IDisposable
-    {
-        public RepositoryStore(IOptions<DapperOptions> options)
-        {
-            Connection = options.Value.Connection;
-        }
-        public readonly string Connection;
-        public void Dispose()
-        {
-        }
-    }
-
     public class RepositoryBase
     {
         public string Connection { get; private set; }
@@ -34,4 +22,9 @@ namespace EAM.Data
             else { logger.LogError("Trying to reset logger."); }
         }
     }
+
+    public class ABC { }
+    public interface IABCD<T> { }
+    public class ABCD : IABCD<ABC> { }
 }
+

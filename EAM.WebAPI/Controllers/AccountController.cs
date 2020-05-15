@@ -7,14 +7,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using System.Security.Claims;
 using Microsoft.Extensions.Logging;
-using EAM.Data;
-using EAM.Data.Repositories;
+using EAM.Application;
+using EAM.Application.Services;
 using EAM.Common.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Identity;
 
 namespace EAM.WebAPI.Controllers
 {
@@ -23,13 +24,13 @@ namespace EAM.WebAPI.Controllers
     public class AccountController : ControllerBase
     {
         private readonly ILogger<AccountController> _logger;
-        private readonly IRepository<UserRepository> _repository;
+        private readonly IBService<UserService> _service;
         private readonly IOptions<JWTOptions> _options;
 
-        public AccountController(ILogger<AccountController> logger, IRepository<UserRepository> repository, IOptions<JWTOptions> options)
+        public AccountController(ILogger<AccountController> logger, IBService<UserService> service, IOptions<JWTOptions> options)
         {
             _logger = logger;
-            _repository = repository;
+            _service = service;
             _options = options;
         }
         [Authorize]
@@ -44,7 +45,7 @@ namespace EAM.WebAPI.Controllers
             {
                 if (string.Equals(name, ClaimTypes.Name)
                     || string.Equals(name, ClaimTypes.Role)
-                    || string.Equals(name, "userid"))                 {
+                    || string.Equals(name, ClaimTypes.NameIdentifier))                 {
                     newClaims.Add(claims[name]);
                 }
             }
@@ -69,14 +70,15 @@ namespace EAM.WebAPI.Controllers
         [Route("gettoken")]
         public string GetToken(string username, string password)
         {
-            if (_repository.Provider.Validate(username, password))
+            var info = _service.Provider.Validate(username, password);
+            if (info != null)
             {
-                var claims = new Claim[]
+                var claims = new List<Claim>();
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, info.EmployeeID.ToString()));
+                foreach(var role in info.Roles)
                 {
-                    new Claim(ClaimTypes.Name, "abc"),
-                    new Claim(ClaimTypes.Role, "admin"),
-                    new Claim("userid", "1")
-                };
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
                 var token = CreateToken(claims);
                 return token;
             }

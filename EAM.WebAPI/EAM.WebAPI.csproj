@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EAM.Application\EAM.Application.csproj" />
     <ProjectReference Include="..\EAM.Common\EAM.Common.csproj" />
-    <ProjectReference Include="..\EAM.Data\EAM.Data.csproj" />
   </ItemGroup>
 
 
