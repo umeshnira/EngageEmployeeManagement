@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EAM.Application;
+using EAM.Application.Services;
 using EAM.Data;
 using EAM.Data.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -21,19 +23,19 @@ namespace EAM.WebAPI.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
-        private readonly IRepository<UserRepository> _repository;
+        private readonly IBService<UserService> _service;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IRepository<UserRepository> repository)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IBService<UserService> service)
         {
             _logger = logger;
-            _repository = repository;
+            _service = service;
             
         }
 
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
-            var a = _repository.Provider.Test("abc", "abc");
+            var a = _service.Provider.Test("abc", "abc");
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

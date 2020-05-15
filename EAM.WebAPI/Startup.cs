@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EAM.Common.Entities;
-using EAM.Data;
+using EAM.Application;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection.Repositories;
@@ -36,11 +36,10 @@ namespace EAM.WebAPI
             services.Configure<JWTOptions>(Configuration.GetSection("JWT"));
             services.Configure<HostedServiceOptions>(Configuration.GetSection("HostedServices"));
 
-            services.AddScoped<RepositoryStore>();
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(IBService<>), typeof(BService<>));
 
-            services.AddSingleton<TaskSingleton>();
-            services.AddSingleton<SendMailSingleton>();
+            services.AddSingleton<TaskServiceSingleton>();
+            services.AddSingleton<SendMailServiceSingleton>();
 
             var jwtOptions = Configuration.GetSection("JWT").Get<JWTOptions>();
             var key = Encoding.ASCII.GetBytes(jwtOptions.Secret);
