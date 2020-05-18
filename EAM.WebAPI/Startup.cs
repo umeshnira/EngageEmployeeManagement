@@ -38,8 +38,7 @@ namespace EAM.WebAPI
 
             services.AddScoped(typeof(IBService<>), typeof(BService<>));
 
-            services.AddSingleton<TaskServiceSingleton>();
-            services.AddSingleton<SendMailServiceSingleton>();
+            services.AddSingleton(typeof(IBSingleton<>), typeof(BSingleton<>));
 
             var jwtOptions = Configuration.GetSection("JWT").Get<JWTOptions>();
             var key = Encoding.ASCII.GetBytes(jwtOptions.Secret);

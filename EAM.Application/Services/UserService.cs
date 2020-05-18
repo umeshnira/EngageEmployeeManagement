@@ -12,11 +12,11 @@ namespace EAM.Application.Services
     {
         public string Test(string userName, string password)
         {
-            return Provider.Test(userName, password);
+            return provider.Test(userName, password);
         }
         public LoginInfo Validate(string userName, string password)
         {
-            return Provider.Validate(userName, password);
+            return provider.Validate(userName, password);
         }
     }
 }

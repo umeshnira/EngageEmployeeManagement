@@ -4,7 +4,7 @@ using EAM.Data;
 
 namespace EAM.Application
 {
-    public interface IBService<T> where T : IBServiceBase, new()
+    public interface IBSingleton<T> where T : IBSingletonBase, new()
     {
         T provider { get; }
     }

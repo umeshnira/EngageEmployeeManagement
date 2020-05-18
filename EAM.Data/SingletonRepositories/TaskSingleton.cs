@@ -6,23 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
-using EAM.Data;
 
-namespace EAM.Application
+namespace EAM.Data
 {
-    public class TaskServiceSingleton 
+    public class TaskSingleton : DataSingletonBase
     {
-        private readonly string Connection;
-        private readonly ILogger Logger;
-
-        public volatile bool stop = false;
-
-        public TaskServiceSingleton(IOptions<DapperOptions> options, ILogger<TaskSingleton> logger)
-        {
-            Connection = options.Value.Connection;
-            Logger = logger;
-        }
-
         public void ExecDeleteNotifications(int count)
         {
             if (!stop)

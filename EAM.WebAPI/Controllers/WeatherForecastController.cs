@@ -35,7 +35,7 @@ namespace EAM.WebAPI.Controllers
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
-            var a = _service.Provider.Test("abc", "abc");
+            var a = _service.provider.Test("abc", "abc");
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

@@ -1,5 +1,5 @@
 ﻿using EAM.Common.Entities;
-using EAM.Data;
+using EAM.Application;
 using EAM.Data.Repositories;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EAM.Application.SingletonServices;
 
 namespace EAM.WebAPI.Service
 {
@@ -18,8 +19,8 @@ namespace EAM.WebAPI.Service
         private Timer _timer;
         private readonly ILogger<EAMHostedService> _logger;
         private readonly IOptions<HostedServiceOptions> _options;
-        private readonly TaskSingleton _tasks;
-        public EAMHostedService(ILogger<EAMHostedService> logger, IOptions<HostedServiceOptions> options, TaskSingleton tasks)
+        private readonly IBSingleton<TaskService> _tasks;
+        public EAMHostedService(ILogger<EAMHostedService> logger, IOptions<HostedServiceOptions> options, IBSingleton<TaskService> tasks)
         {
             _logger = logger;
             _options = options;
@@ -42,14 +43,14 @@ namespace EAM.WebAPI.Service
         void ExecuteAtInterval(object state)
         {
             //Debug.Print(_options.Value.MinutesToExpire.ToString());
-            _tasks.ExecDeleteNotifications(10);
-            _tasks.ExecTask2(10);
+            _tasks.provider.ExecDeleteNotifications(10);
+            _tasks.provider.ExecTask2(10);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
             Debug.Print("EAM Service exiting");
-            _tasks.stop = true;
+            _tasks?.provider?.TryStop();
             //New Timer does not have a stop. 
             _timer?.Change(Timeout.Infinite, 0);
             _timer?.Dispose();
@@ -60,7 +61,7 @@ namespace EAM.WebAPI.Service
         {
             Debug.Print("EAM Service disposing");
 
-            _tasks.stop = true;
+            _tasks?.provider?.TryStop();
             _timer?.Dispose();
         }
     }

@@ -33,7 +33,7 @@ namespace EAM.WebAPI.Controllers
             try
             {
                 var userid = Convert.ToInt32(this.User.Identity.Name);
-                return _service.Provider.GetAdminList(del == 1);
+                return _service.provider.GetAdminList(del == 1);
             }
             catch (Exception ex)
             {
@@ -49,7 +49,7 @@ namespace EAM.WebAPI.Controllers
             try
             {
                 var userid = Convert.ToInt32(this.User.Identity.Name);
-                return _service.Provider.UserNotificationList(userid);
+                return _service.provider.UserNotificationList(userid);
             }
             catch (Exception ex)
             {
@@ -64,7 +64,7 @@ namespace EAM.WebAPI.Controllers
             try
             {
                 var userid = Convert.ToInt32(this.User.Identity.Name);
-                return _service.Provider.ActionTaken(nid, userid);
+                return _service.provider.ActionTaken(nid, userid);
             }
             catch (Exception ex)
             {
@@ -78,7 +78,7 @@ namespace EAM.WebAPI.Controllers
         {
             try
             {
-                return _service.Provider.AssignToUsers(sentObj);
+                return _service.provider.AssignToUsers(sentObj);
             }
             catch (Exception ex)
             {
@@ -95,7 +95,7 @@ namespace EAM.WebAPI.Controllers
             {
                 var userid = Convert.ToInt32(this.User.Identity.Name);
 
-                var id = _service.Provider.CreateNotification(notification, userid);
+                var id = _service.provider.CreateNotification(notification, userid);
                 return new SuccessObj<long>() { result = id, success = true };
             }
             catch (Exception ex)
@@ -113,7 +113,7 @@ namespace EAM.WebAPI.Controllers
             {
                 var userid = Convert.ToInt32(this.User.Identity.Name);
 
-                return _service.Provider.GetOne(nid, userid);
+                return _service.provider.GetOne(nid, userid);
             }
             catch (Exception ex)
             {
@@ -131,7 +131,7 @@ namespace EAM.WebAPI.Controllers
             {
                 var userid = Convert.ToInt32(this.User.Identity.Name);
 
-                return _service.Provider.DeleteOne(idObj.id, userid);
+                return _service.provider.DeleteOne(idObj.id, userid);
             }
             catch (Exception ex)
             {
