@@ -14,30 +14,30 @@ namespace EAM.Application.Services
     {
         public long CreateNotification(Notification notification, int userId)
         {
-            return Provider.CreateNotification(notification, userId);
+            return provider.CreateNotification(notification, userId);
         }
 
         public Notification GetOne(long id, int userId)
         {
-            return Provider.GetOne(id, userId);
+            return provider.GetOne(id, userId);
         }
 
         public bool DeleteOne(long id, int userId)
         {
-            return Provider.DeleteOne(id, userId);
+            return provider.DeleteOne(id, userId);
         }
 
         public List<NotificationList> GetAdminList(bool isDeleted)
         {
-            return Provider.GetAdminList(isDeleted);
+            return provider.GetAdminList(isDeleted);
         }
         public bool AssignToUsers(NotificationSent list)
         {
-            return Provider.AssignToUsers(list);
+            return provider.AssignToUsers(list);
         }
         public List<Notification> UserNotificationList(int userId)
         {
-            return Provider.UserNotificationList(userId);
+            return provider.UserNotificationList(userId);
         }
 
         public bool ActionTaken(long notificationID, int userId)

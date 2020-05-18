@@ -9,10 +9,12 @@ using Microsoft.Extensions.Logging;
 
 namespace EAM.Data
 {
-    public class RepositoryBase
+    public class DataSingletonBase
     {
         public string Connection { get; private set; }
         public ILogger Logger  { get; private set; }
+
+        public volatile bool stop = false;
 
         public void SetOnce(string connection, ILogger logger)
         {

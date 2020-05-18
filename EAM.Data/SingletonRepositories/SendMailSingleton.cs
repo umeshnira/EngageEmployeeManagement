@@ -9,19 +9,8 @@ using System.Text;
 
 namespace EAM.Data
 {
-    public class SendMailSingleton 
+    public class SendMailSingleton : DataSingletonBase 
     {
-        private readonly string Connection;
-        private readonly ILogger Logger;
-
-        public volatile bool stop = false;
-
-        public SendMailSingleton(IOptions<DapperOptions> options, ILogger<SendMailSingleton> logger)
-        {
-            Connection = options.Value.Connection;
-            Logger = logger;
-        }
-
         public void ExecSendMail(int count)
         {
             if (!stop)

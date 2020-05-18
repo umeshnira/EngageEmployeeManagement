@@ -70,7 +70,7 @@ namespace EAM.WebAPI.Controllers
         [Route("gettoken")]
         public string GetToken(string username, string password)
         {
-            var info = _service.Provider.Validate(username, password);
+            var info = _service.provider.Validate(username, password);
             if (info != null)
             {
                 var claims = new List<Claim>();

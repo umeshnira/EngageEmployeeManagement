@@ -8,11 +8,11 @@ using EAM.Data;
 
 namespace EAM.Application
 {
-    public class BService<T> : IBService<T> where T : IBServiceBase, new()
+    public class BSingleton<T> : IBSingleton<T> where T : IBSingletonBase, new()
     {
         private T _provider;
-        public BService(IOptions<DapperOptions> options, ILoggerFactory loggerFactory)
-        { 
+        public BSingleton(IOptions<DapperOptions> options, ILoggerFactory loggerFactory)
+        {
             _provider = new T();
             _provider.SetDataParams(options.Value.Connection, loggerFactory);
         }

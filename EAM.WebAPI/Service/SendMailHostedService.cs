@@ -1,6 +1,6 @@
-﻿using EAM.Common.Entities;
-using EAM.Data;
-using EAM.Data.Repositories;
+﻿using EAM.Application;
+using EAM.Application.SingletonServices;
+using EAM.Common.Entities;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -18,8 +18,8 @@ namespace EAM.WebAPI.Service
         private Timer _timer;
         private readonly ILogger<SendMailHostedService> _logger;
         private readonly IOptions<HostedServiceOptions> _options;
-        private readonly SendMailSingleton _tasks;
-        public SendMailHostedService(ILogger<SendMailHostedService> logger, IOptions<HostedServiceOptions> options, SendMailSingleton tasks)
+        private readonly IBSingleton<SendMailService> _tasks;
+        public SendMailHostedService(ILogger<SendMailHostedService> logger, IOptions<HostedServiceOptions> options, IBSingleton<SendMailService> tasks)
         {
             _logger = logger;
             _options = options;
@@ -42,13 +42,13 @@ namespace EAM.WebAPI.Service
         void ExecuteAtInterval(object state)
         {
             //Debug.Print(_options.Value.MinutesToExpire.ToString());
-            _tasks.ExecSendMail(10);
+            _tasks.provider.ExecSendMail(10);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
             Debug.Print("Send Mail Service exiting"); // when function is executing
-            _tasks.stop = true;
+            _tasks?.provider?.TryStop();
             //New Timer does not have a stop. 
             _timer?.Change(Timeout.Infinite, 0);
             _timer?.Dispose();
@@ -59,7 +59,7 @@ namespace EAM.WebAPI.Service
         {
             Debug.Print("Send Mail Service disposing"); // when error is raised
 
-            _tasks.stop = true;
+            _tasks?.provider?.TryStop();
             _timer?.Dispose();
         }
 
